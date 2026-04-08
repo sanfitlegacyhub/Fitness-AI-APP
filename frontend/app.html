@@ -1,0 +1,1244 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitness AI - Your Personal AI Fitness Coach</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #8b5cf6;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --dark: #1f2937;
+            --light: #f9fafb;
+            --gray: #6b7280;
+            --border: #e5e7eb;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            min-height: 100vh;
+            color: var(--dark);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .app-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 32px 48px;
+            margin-bottom: 32px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            box-shadow: 0 12px 35px rgba(99, 102, 241, 0.4);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .brand h1 {
+            font-size: 36px;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -1px;
+        }
+
+        .brand p {
+            color: var(--gray);
+            font-size: 15px;
+            font-weight: 500;
+            margin-top: 4px;
+        }
+
+        .user-info {
+            display: none;
+            align-items: center;
+            gap: 16px;
+            padding: 14px 28px;
+            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+            border-radius: 16px;
+            border: 2px solid var(--border);
+        }
+
+        .user-avatar {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 18px;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        /* Navigation */
+        .nav-tabs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .nav-tab {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            border: 2px solid transparent;
+            padding: 24px;
+            border-radius: 18px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-tab::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .nav-tab:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+            border-color: var(--primary);
+        }
+
+        .nav-tab.active {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            transform: translateY(-4px);
+            box-shadow: 0 16px 48px rgba(99, 102, 241, 0.4);
+        }
+
+        .nav-tab.active::before {
+            opacity: 1;
+        }
+
+        .nav-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(99, 102, 241, 0.12);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            position: relative;
+            z-index: 1;
+            transition: all 0.3s ease;
+        }
+
+        .nav-tab.active .nav-icon {
+            background: rgba(255, 255, 255, 0.25);
+            transform: scale(1.1);
+        }
+
+        .nav-content {
+            flex: 1;
+            position: relative;
+            z-index: 1;
+        }
+
+        .nav-title {
+            font-weight: 700;
+            font-size: 17px;
+            margin-bottom: 4px;
+        }
+
+        .nav-desc {
+            font-size: 13px;
+            opacity: 0.85;
+        }
+
+        /* Content Card */
+        .content-card {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 48px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            display: none;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .content-card.active {
+            display: block;
+            animation: fadeInUp 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-header {
+            margin-bottom: 36px;
+            padding-bottom: 24px;
+            border-bottom: 3px solid var(--border);
+        }
+
+        .section-title {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--dark);
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+        }
+
+        .section-subtitle {
+            color: var(--gray);
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        /* Form Styles */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 10px;
+            font-size: 15px;
+            letter-spacing: 0.3px;
+        }
+
+        .form-input,
+        .form-select {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid var(--border);
+            border-radius: 14px;
+            font-size: 16px;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            background: white;
+            font-weight: 500;
+        }
+
+        .form-input:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 5px rgba(99, 102, 241, 0.12);
+            transform: translateY(-2px);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 16px 32px;
+            border: none;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-family: inherit;
+            letter-spacing: 0.3px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            box-shadow: 0 12px 35px rgba(99, 102, 241, 0.35);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 18px 48px rgba(99, 102, 241, 0.45);
+        }
+
+        .btn-primary:active {
+            transform: translateY(-1px);
+        }
+
+        .btn-block {
+            width: 100%;
+        }
+
+        /* Alert Messages */
+        .alert {
+            padding: 18px 24px;
+            border-radius: 14px;
+            margin: 24px 0;
+            display: none;
+            align-items: center;
+            gap: 14px;
+            animation: slideInRight 0.4s ease;
+            font-weight: 600;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .alert.show {
+            display: flex;
+        }
+
+        .alert-success {
+            background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+            color: #065f46;
+            border: 2px solid #10b981;
+        }
+
+        .alert-error {
+            background: linear-gradient(135deg, #fee2e2, #fecaca);
+            color: #991b1b;
+            border: 2px solid #ef4444;
+        }
+
+        .alert-icon {
+            font-size: 24px;
+        }
+
+        /* Loading Spinner */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 48px;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 24px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 16px;
+            color: var(--gray);
+            font-weight: 600;
+        }
+
+        /* Results Display */
+        .results {
+            display: none;
+            margin-top: 36px;
+        }
+
+        .results.show {
+            display: block;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 24px;
+            margin-top: 24px;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+            padding: 28px;
+            border-radius: 18px;
+            border-left: 5px solid var(--primary);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .metric-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+            border-left-width: 8px;
+        }
+
+        .metric-label {
+            font-size: 13px;
+            color: var(--gray);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .metric-value {
+            font-size: 32px;
+            font-weight: 900;
+            color: var(--primary);
+            line-height: 1;
+            margin-bottom: 6px;
+        }
+
+        .metric-unit {
+            font-size: 15px;
+            color: var(--gray);
+            font-weight: 600;
+        }
+
+        /* Workout & Diet Display */
+        .plan-section {
+            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+            padding: 36px;
+            border-radius: 20px;
+            margin: 24px 0;
+            border: 2px solid var(--border);
+        }
+
+        .plan-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid var(--border);
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .plan-title {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--dark);
+        }
+
+        .plan-badge {
+            padding: 8px 20px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-radius: 24px;
+            font-size: 13px;
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        .day-card {
+            background: white;
+            padding: 28px;
+            border-radius: 16px;
+            margin: 18px 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .day-card:hover {
+            border-color: var(--primary);
+            transform: translateX(8px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .day-header {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--dark);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .day-focus {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--gray);
+            padding: 6px 14px;
+            background: var(--light);
+            border-radius: 20px;
+        }
+
+        .exercise-item,
+        .meal-item {
+            padding: 18px;
+            background: var(--light);
+            border-radius: 12px;
+            margin: 12px 0;
+            border-left: 4px solid var(--primary);
+            transition: all 0.3s ease;
+        }
+
+        .exercise-item:hover,
+        .meal-item:hover {
+            background: white;
+            transform: translateX(6px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .exercise-name,
+        .meal-name {
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .exercise-details,
+        .meal-details {
+            font-size: 14px;
+            color: var(--gray);
+            font-weight: 500;
+        }
+
+        .tips-section {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            padding: 28px;
+            border-radius: 16px;
+            margin-top: 24px;
+            border: 2px solid #f59e0b;
+        }
+
+        .tips-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: #92400e;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .tips-list {
+            list-style: none;
+        }
+
+        .tips-list li {
+            padding: 12px 0;
+            color: #78350f;
+            display: flex;
+            align-items: start;
+            gap: 12px;
+            font-weight: 600;
+        }
+
+        .tips-list li:before {
+            content: "✓";
+            color: #f59e0b;
+            font-weight: bold;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        /* Welcome Screen */
+        .welcome-screen {
+            text-align: center;
+            padding: 60px 24px;
+        }
+
+        .welcome-icon {
+            font-size: 96px;
+            margin-bottom: 24px;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .welcome-title {
+            font-size: 42px;
+            font-weight: 900;
+            margin-bottom: 18px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -1px;
+        }
+
+        .welcome-text {
+            font-size: 19px;
+            color: var(--gray);
+            max-width: 700px;
+            margin: 0 auto 36px;
+            line-height: 1.8;
+            font-weight: 500;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 24px;
+            margin-top: 48px;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, #ffffff, #f8fafc);
+            padding: 36px;
+            border-radius: 20px;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid var(--border);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+            border-color: var(--primary);
+        }
+
+        .feature-icon {
+            font-size: 48px;
+            margin-bottom: 18px;
+        }
+
+        .feature-title {
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: var(--dark);
+        }
+
+        .feature-desc {
+            font-size: 15px;
+            color: var(--gray);
+            line-height: 1.7;
+            font-weight: 500;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 12px;
+            }
+
+            .header {
+                padding: 24px;
+            }
+
+            .brand h1 {
+                font-size: 28px;
+            }
+
+            .logo {
+                width: 56px;
+                height: 56px;
+                font-size: 28px;
+            }
+
+            .nav-tabs {
+                grid-template-columns: 1fr;
+            }
+
+            .content-card {
+                padding: 28px;
+            }
+
+            .section-title {
+                font-size: 26px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .welcome-title {
+                font-size: 32px;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo-section">
+                <div class="logo">💪</div>
+                <div class="brand">
+                    <h1>Fitness AI</h1>
+                    <p>Your Personal AI Fitness Coach</p>
+                </div>
+            </div>
+            <div class="user-info" id="userInfo">
+                <div class="user-avatar" id="userAvatar">U</div>
+                <div>
+                    <div style="font-weight: 700; font-size: 15px;" id="userName">User</div>
+                    <div style="font-size: 13px; color: var(--gray); font-weight: 600;" id="userId">ID: -</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="nav-tabs">
+            <div class="nav-tab active" onclick="showTab('welcome')">
+                <div class="nav-icon">🏠</div>
+                <div class="nav-content">
+                    <div class="nav-title">Home</div>
+                    <div class="nav-desc">Get started</div>
+                </div>
+            </div>
+            <div class="nav-tab" onclick="showTab('register')">
+                <div class="nav-icon">👤</div>
+                <div class="nav-content">
+                    <div class="nav-title">Register</div>
+                    <div class="nav-desc">Create account</div>
+                </div>
+            </div>
+            <div class="nav-tab" onclick="showTab('profile')">
+                <div class="nav-icon">📝</div>
+                <div class="nav-content">
+                    <div class="nav-title">Profile</div>
+                    <div class="nav-desc">Your details</div>
+                </div>
+            </div>
+            <div class="nav-tab" onclick="showTab('metrics')">
+                <div class="nav-icon">📊</div>
+                <div class="nav-content">
+                    <div class="nav-title">Metrics</div>
+                    <div class="nav-desc">View stats</div>
+                </div>
+            </div>
+            <div class="nav-tab" onclick="showTab('workout')">
+                <div class="nav-icon">🏋️</div>
+                <div class="nav-content">
+                    <div class="nav-title">Workout</div>
+                    <div class="nav-desc">Get plan</div>
+                </div>
+            </div>
+            <div class="nav-tab" onclick="showTab('diet')">
+                <div class="nav-icon">🥗</div>
+                <div class="nav-content">
+                    <div class="nav-title">Diet</div>
+                    <div class="nav-desc">Meal plan</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Welcome Tab -->
+        <div id="welcome" class="content-card active">
+            <div class="welcome-screen">
+                <div class="welcome-icon">💪</div>
+                <h2 class="welcome-title">Welcome to Fitness AI</h2>
+                <p class="welcome-text">
+                    Transform your fitness journey with AI-powered personalized workout plans and nutrition guidance. 
+                    Get started by creating your account and profile to receive customized recommendations based on your goals.
+                </p>
+                <button class="btn btn-primary" onclick="showTab('register')" style="font-size: 18px; padding: 18px 40px;">
+                    Get Started →
+                </button>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🎯</div>
+                        <div class="feature-title">Goal-Based Plans</div>
+                        <div class="feature-desc">Customized workouts for weight loss, muscle gain, or maintenance</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🍎</div>
+                        <div class="feature-title">Smart Nutrition</div>
+                        <div class="feature-desc">AI-generated meal plans with precise macro calculations</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📈</div>
+                        <div class="feature-title">Track Progress</div>
+                        <div class="feature-desc">Monitor your BMI, BMR, TDEE, and fitness metrics</div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🤖</div>
+                        <div class="feature-title">AI-Powered</div>
+                        <div class="feature-desc">Intelligent recommendations based on your activity level</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Register Tab -->
+        <div id="register" class="content-card">
+            <div class="section-header">
+                <h2 class="section-title">Create Your Account</h2>
+                <p class="section-subtitle">Join thousands of users achieving their fitness goals</p>
+            </div>
+            <form onsubmit="registerUser(event)">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">📧 Email Address</label>
+                        <input type="email" class="form-input" id="reg-email" placeholder="you@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">👤 Username</label>
+                        <input type="text" class="form-input" id="reg-username" placeholder="Choose a username" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">🔒 Password</label>
+                    <input type="password" class="form-input" id="reg-password" placeholder="Create a strong password" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">
+                    Create Account →
+                </button>
+            </form>
+            <div class="alert alert-success" id="register-success">
+                <span class="alert-icon">✓</span>
+                <span id="register-success-text"></span>
+            </div>
+            <div class="alert alert-error" id="register-error">
+                <span class="alert-icon">✕</span>
+                <span id="register-error-text"></span>
+            </div>
+        </div>
+
+        <!-- Profile Tab -->
+        <div id="profile" class="content-card">
+            <div class="section-header">
+                <h2 class="section-title">Create Your Profile</h2>
+                <p class="section-subtitle">Tell us about yourself to get personalized recommendations</p>
+            </div>
+            <form onsubmit="createProfile(event)">
+                <div class="form-group">
+                    <label class="form-label">🆔 User ID</label>
+                    <input type="number" class="form-input" id="profile-user-id" placeholder="Enter your User ID from registration" required>
+                </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">🎂 Age</label>
+                        <input type="number" class="form-input" id="profile-age" placeholder="25" min="10" max="120" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">⚧ Gender</label>
+                        <select class="form-select" id="profile-gender" required>
+                            <option value="">Select gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">📏 Height (cm)</label>
+                        <input type="number" class="form-input" id="profile-height" placeholder="170" min="100" max="250" step="0.1" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">⚖️ Weight (kg)</label>
+                        <input type="number" class="form-input" id="profile-weight" placeholder="70" min="30" max="300" step="0.1" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">🏃 Activity Level</label>
+                    <select class="form-select" id="profile-activity" required>
+                        <option value="">Select your activity level</option>
+                        <option value="sedentary">Sedentary - Little or no exercise</option>
+                        <option value="lightly_active">Lightly Active - Exercise 1-3 days/week</option>
+                        <option value="moderately_active">Moderately Active - Exercise 3-5 days/week</option>
+                        <option value="very_active">Very Active - Exercise 6-7 days/week</option>
+                        <option value="extremely_active">Extremely Active - Professional athlete</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">🎯 Fitness Goal</label>
+                    <select class="form-select" id="profile-goal" required>
+                        <option value="">Select your goal</option>
+                        <option value="lose_weight">Lose Weight - Burn fat and get lean</option>
+                        <option value="maintain">Maintain Weight - Stay healthy</option>
+                        <option value="gain_muscle">Gain Muscle - Build strength and size</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">
+                    Create Profile & Calculate Metrics →
+                </button>
+            </form>
+            <div class="alert alert-success" id="profile-success">
+                <span class="alert-icon">✓</span>
+                <span id="profile-success-text"></span>
+            </div>
+            <div class="alert alert-error" id="profile-error">
+                <span class="alert-icon">✕</span>
+                <span id="profile-error-text"></span>
+            </div>
+        </div>
+
+        <!-- Metrics Tab -->
+        <div id="metrics" class="content-card">
+            <div class="section-header">
+                <h2 class="section-title">Your Fitness Metrics</h2>
+                <p class="section-subtitle">View your calculated health and fitness statistics</p>
+            </div>
+            <div class="form-group">
+                <label class="form-label">🆔 User ID</label>
+                <input type="number" class="form-input" id="metrics-user-id" placeholder="Enter your User ID">
+            </div>
+            <button onclick="getMetrics()" class="btn btn-primary btn-block">
+                Calculate My Metrics →
+            </button>
+            <div class="loading" id="metrics-loading">
+                <div class="spinner"></div>
+                <p class="loading-text">Calculating your metrics...</p>
+            </div>
+            <div class="results" id="metrics-result"></div>
+            <div class="alert alert-error" id="metrics-error">
+                <span class="alert-icon">✕</span>
+                <span id="metrics-error-text"></span>
+            </div>
+        </div>
+
+        <!-- Workout Tab -->
+        <div id="workout" class="content-card">
+            <div class="section-header">
+                <h2 class="section-title">Generate Workout Plan</h2>
+                <p class="section-subtitle">Get your personalized AI-powered workout routine</p>
+            </div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="form-label">🆔 User ID</label>
+                    <input type="number" class="form-input" id="workout-user-id" placeholder="Enter your User ID">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">📅 Duration (weeks)</label>
+                    <input type="number" class="form-input" id="workout-duration" value="8" min="4" max="16">
+                </div>
+            </div>
+            <button onclick="generateWorkout()" class="btn btn-primary btn-block">
+                Generate My Workout Plan →
+            </button>
+            <div class="loading" id="workout-loading">
+                <div class="spinner"></div>
+                <p class="loading-text">Creating your personalized workout plan...</p>
+            </div>
+            <div class="results" id="workout-result"></div>
+            <div class="alert alert-error" id="workout-error">
+                <span class="alert-icon">✕</span>
+                <span id="workout-error-text"></span>
+            </div>
+        </div>
+
+        <!-- Diet Tab -->
+        <div id="diet" class="content-card">
+            <div class="section-header">
+                <h2 class="section-title">Generate Diet Plan</h2>
+                <p class="section-subtitle">Get your personalized nutrition and meal plan</p>
+            </div>
+            <div class="form-group">
+                <label class="form-label">🆔 User ID</label>
+                <input type="number" class="form-input" id="diet-user-id" placeholder="Enter your User ID">
+            </div>
+            <button onclick="generateDiet()" class="btn btn-primary btn-block">
+                Generate My Diet Plan →
+            </button>
+            <div class="loading" id="diet-loading">
+                <div class="spinner"></div>
+                <p class="loading-text">Creating your personalized diet plan...</p>
+            </div>
+            <div class="results" id="diet-result"></div>
+            <div class="alert alert-error" id="diet-error">
+                <span class="alert-icon">✕</span>
+                <span id="diet-error-text"></span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:8486';
+        let currentUserId = null;
+
+        function showTab(tabName) {
+            document.querySelectorAll('.content-card').forEach(card => card.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            event.target.closest('.nav-tab').classList.add('active');
+        }
+
+        function showError(elementId, message) {
+            const el = document.getElementById(elementId);
+            const textEl = document.getElementById(elementId + '-text');
+            if (textEl) textEl.textContent = message;
+            el.classList.add('show');
+            setTimeout(() => el.classList.remove('show'), 5000);
+        }
+
+        function showSuccess(elementId, message) {
+            const el = document.getElementById(elementId);
+            const textEl = document.getElementById(elementId + '-text');
+            if (textEl) textEl.textContent = message;
+            el.classList.add('show');
+            setTimeout(() => el.classList.remove('show'), 5000);
+        }
+
+        function updateUserInfo(userId, username) {
+            currentUserId = userId;
+            document.getElementById('userInfo').style.display = 'flex';
+            document.getElementById('userName').textContent = username;
+            document.getElementById('userId').textContent = `ID: ${userId}`;
+            document.getElementById('userAvatar').textContent = username.charAt(0).toUpperCase();
+            
+            ['profile-user-id', 'metrics-user-id', 'workout-user-id', 'diet-user-id'].forEach(id => {
+                document.getElementById(id).value = userId;
+            });
+        }
+
+        async function registerUser(event) {
+            event.preventDefault();
+            const data = {
+                email: document.getElementById('reg-email').value,
+                username: document.getElementById('reg-username').value,
+                password: document.getElementById('reg-password').value
+            };
+
+            try {
+                const response = await fetch(`${API_URL}/users`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    showSuccess('register-success', `Account created successfully! Your User ID is: ${result.id}`);
+                    updateUserInfo(result.id, result.username);
+                    event.target.reset();
+                    setTimeout(() => showTab('profile'), 2000);
+                } else {
+                    const error = await response.json();
+                    showError('register-error', error.detail || 'Registration failed');
+                }
+            } catch (error) {
+                showError('register-error', 'Network error. Make sure the backend is running on http://localhost:8000');
+            }
+        }
+
+        async function createProfile(event) {
+            event.preventDefault();
+            const userId = document.getElementById('profile-user-id').value;
+            const data = {
+                age: parseInt(document.getElementById('profile-age').value),
+                gender: document.getElementById('profile-gender').value,
+                height: parseFloat(document.getElementById('profile-height').value),
+                weight: parseFloat(document.getElementById('profile-weight').value),
+                activity_level: document.getElementById('profile-activity').value,
+                goal: document.getElementById('profile-goal').value
+            };
+
+            try {
+                const response = await fetch(`${API_URL}/profile/${userId}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    showSuccess('profile-success', 'Profile created successfully! View your metrics now.');
+                    setTimeout(() => showTab('metrics'), 2000);
+                } else {
+                    const error = await response.json();
+                    showError('profile-error', error.detail || 'Profile creation failed');
+                }
+            } catch (error) {
+                showError('profile-error', 'Network error. Make sure the backend is running.');
+            }
+        }
+
+        async function getMetrics() {
+            const userId = document.getElementById('metrics-user-id').value;
+            if (!userId) {
+                showError('metrics-error', 'Please enter your User ID');
+                return;
+            }
+
+            document.getElementById('metrics-loading').classList.add('show');
+            document.getElementById('metrics-result').classList.remove('show');
+
+            try {
+                const response = await fetch(`${API_URL}/metrics/${userId}`);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    displayMetrics(data);
+                } else {
+                    const error = await response.json();
+                    showError('metrics-error', error.detail || 'Failed to fetch metrics');
+                }
+            } catch (error) {
+                showError('metrics-error', 'Network error. Make sure the backend is running.');
+            } finally {
+                document.getElementById('metrics-loading').classList.remove('show');
+            }
+        }
+
+        function displayMetrics(data) {
+            const html = `
+                <div class="metric-grid">
+                    <div class="metric-card">
+                        <div class="metric-label">BMI</div>
+                        <div class="metric-value">${data.bmi}</div>
+                        <div class="metric-unit">${data.bmi_category}</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">BMR</div>
+                        <div class="metric-value">${Math.round(data.bmr)}</div>
+                        <div class="metric-unit">cal/day</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">TDEE</div>
+                        <div class="metric-value">${Math.round(data.tdee)}</div>
+                        <div class="metric-unit">cal/day</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Target Calories</div>
+                        <div class="metric-value">${Math.round(data.target_calories)}</div>
+                        <div class="metric-unit">cal/day</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Protein</div>
+                        <div class="metric-value">${Math.round(data.macros.protein)}</div>
+                        <div class="metric-unit">grams/day</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Carbs</div>
+                        <div class="metric-value">${Math.round(data.macros.carbs)}</div>
+                        <div class="metric-unit">grams/day</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Fats</div>
+                        <div class="metric-value">${Math.round(data.macros.fats)}</div>
+                        <div class="metric-unit">grams/day</div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('metrics-result').innerHTML = html;
+            document.getElementById('metrics-result').classList.add('show');
+        }
+
+        async function generateWorkout() {
+            const userId = document.getElementById('workout-user-id').value;
+            const duration = document.getElementById('workout-duration').value;
+            if (!userId) {
+                showError('workout-error', 'Please enter your User ID');
+                return;
+            }
+
+            document.getElementById('workout-loading').classList.add('show');
+            document.getElementById('workout-result').classList.remove('show');
+
+            try {
+                const response = await fetch(`${API_URL}/workout/${userId}?duration_weeks=${duration}`, {
+                    method: 'POST'
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    displayWorkout(data.plan);
+                } else {
+                    const error = await response.json();
+                    showError('workout-error', error.detail || 'Failed to generate workout');
+                }
+            } catch (error) {
+                showError('workout-error', 'Network error. Make sure the backend is running.');
+            } finally {
+                document.getElementById('workout-loading').classList.remove('show');
+            }
+        }
+
+        function displayWorkout(plan) {
+            let html = `
+                <div class="plan-section">
+                    <div class="plan-header">
+                        <div class="plan-title">${plan.title}</div>
+                        <div class="plan-badge">${plan.difficulty} Level</div>
+                    </div>
+                    <p style="color: var(--gray); margin-bottom: 24px; font-weight: 600;">
+                        <strong>Duration:</strong> ${plan.duration_weeks} weeks | 
+                        <strong>Progression:</strong> ${plan.progression}
+                    </p>
+            `;
+
+            for (const [day, details] of Object.entries(plan.weekly_schedule)) {
+                html += `
+                    <div class="day-card">
+                        <div class="day-header">
+                            📅 ${day}
+                            <span style="font-size: 14px; font-weight: 500; color: var(--gray);">
+                                Focus: ${details.focus.join(', ')}
+                            </span>
+                        </div>
+                `;

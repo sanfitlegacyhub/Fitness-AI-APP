@@ -1,4 +1,3 @@
-# Fitness-AI-APP
 # 💪 Fitness AI App
 
 An AI-powered fitness and nutrition planning application that provides personalized workout plans and diet recommendations based on your goals and fitness level.
