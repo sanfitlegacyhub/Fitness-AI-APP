@@ -1107,15 +1107,43 @@
             if (!currentUser) return;
             
             document.getElementById('metrics-loading').classList.add('show');
+            document.getElementById('metrics-result').innerHTML = '';
             
             try {
+                console.log('Loading metrics for user:', currentUser.id);
                 const response = await fetch(`${API_URL}/metrics/${currentUser.id}`);
+                console.log('Metrics response status:', response.status);
+                
                 if (response.ok) {
                     const data = await response.json();
+                    console.log('Metrics data received:', data);
                     displayMetrics(data);
+                } else if (response.status === 404) {
+                    // User has no profile yet
+                    console.log('No profile found for user');
+                    document.getElementById('metrics-result').innerHTML = `
+                        <div style="text-align: center; padding: 60px 20px; background: linear-gradient(135deg, #f8fafc, #f1f5f9); border-radius: 16px;">
+                            <div style="font-size: 64px; margin-bottom: 16px;">📊</div>
+                            <h3 style="margin: 0 0 12px 0; color: var(--dark); font-size: 24px;">No Metrics Yet</h3>
+                            <p style="margin: 0 0 24px 0; color: var(--gray); font-size: 16px;">Set your fitness goals first to see your personalized metrics</p>
+                            <button onclick="showSection('goal')" style="background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border: none; padding: 12px 32px; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer;">
+                                Set Your Goals
+                            </button>
+                        </div>
+                    `;
+                } else {
+                    const errorData = await response.json();
+                    console.error('Error response:', errorData);
+                    throw new Error(errorData.detail || 'Failed to load metrics');
                 }
             } catch (error) {
                 console.error('Error loading metrics:', error);
+                document.getElementById('metrics-result').innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: var(--danger);">
+                        <p>❌ Error loading metrics. Please try again.</p>
+                        <p style="font-size: 14px; margin-top: 8px;">${error.message}</p>
+                    </div>
+                `;
             } finally {
                 document.getElementById('metrics-loading').classList.remove('show');
             }
