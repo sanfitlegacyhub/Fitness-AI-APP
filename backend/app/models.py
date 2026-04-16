@@ -23,6 +23,10 @@ class GoalEnum(str, enum.Enum):
     MAINTAIN = "maintain"
     GAIN_MUSCLE = "gain_muscle"
 
+class MembershipTypeEnum(str, enum.Enum):
+    YOGA = "yoga"
+    GYM = "gym"
+
 class User(Base):
     __tablename__ = "users"
     
@@ -52,6 +56,7 @@ class UserProfile(Base):
     # Fitness Info
     activity_level = Column(Enum(ActivityLevelEnum))
     goal = Column(Enum(GoalEnum))
+    membership_type = Column(Enum(MembershipTypeEnum), nullable=True)  # New field
     
     # Calculated Metrics
     bmi = Column(Float)

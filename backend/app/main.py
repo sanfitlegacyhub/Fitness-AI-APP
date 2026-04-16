@@ -11,7 +11,7 @@ import json
 import os
 
 from app.database import get_db, create_tables
-from app.models import User, UserProfile, WorkoutPlan, DietPlan, GenderEnum, ActivityLevelEnum, GoalEnum
+from app.models import User, UserProfile, WorkoutPlan, DietPlan, GenderEnum, ActivityLevelEnum, GoalEnum, MembershipTypeEnum
 from app.calculator import FitnessCalculator
 from app.workout_generator import WorkoutGenerator
 from app.diet_generator import DietGenerator
@@ -52,6 +52,7 @@ class UserProfileCreate(BaseModel):
     weight: float
     activity_level: str  # Accept string, will convert to enum
     goal: str  # Accept string, will convert to enum
+    membership_type: Optional[str] = None  # New field
 
 class UserProfileUpdate(BaseModel):
     age: Optional[int] = None
@@ -60,6 +61,7 @@ class UserProfileUpdate(BaseModel):
     weight: Optional[float] = None
     activity_level: Optional[ActivityLevelEnum] = None
     goal: Optional[GoalEnum] = None
+    membership_type: Optional[MembershipTypeEnum] = None  # New field
 
 class UserResponse(BaseModel):
     id: int
@@ -78,6 +80,7 @@ class ProfileResponse(BaseModel):
     weight: float
     activity_level: ActivityLevelEnum
     goal: GoalEnum
+    membership_type: Optional[MembershipTypeEnum] = None
     bmi: Optional[float] = None
     bmr: Optional[float] = None
     tdee: Optional[float] = None
@@ -246,6 +249,7 @@ def create_user_profile(user_id: int, profile: UserProfileCreate, db: Session = 
         gender_enum = GenderEnum(profile.gender)
         activity_enum = ActivityLevelEnum(profile.activity_level)
         goal_enum = GoalEnum(profile.goal)
+        membership_enum = MembershipTypeEnum(profile.membership_type) if profile.membership_type else None
     except ValueError as e:
         raise HTTPException(status_code=400, detail=f"Invalid enum value: {str(e)}")
     
@@ -267,6 +271,7 @@ def create_user_profile(user_id: int, profile: UserProfileCreate, db: Session = 
         existing_profile.weight = profile.weight
         existing_profile.activity_level = activity_enum.value
         existing_profile.goal = goal_enum.value
+        existing_profile.membership_type = membership_enum.value if membership_enum else None
         existing_profile.bmi = metrics["bmi"]
         existing_profile.bmr = metrics["bmr"]
         existing_profile.tdee = metrics["tdee"]
@@ -284,6 +289,7 @@ def create_user_profile(user_id: int, profile: UserProfileCreate, db: Session = 
             weight=profile.weight,
             activity_level=activity_enum.value,
             goal=goal_enum.value,
+            membership_type=membership_enum.value if membership_enum else None,
             bmi=metrics["bmi"],
             bmr=metrics["bmr"],
             tdee=metrics["tdee"],
@@ -412,11 +418,12 @@ def generate_workout(user_id: int, duration_weeks: int = 8, db: Session = Depend
     if not profile:
         raise HTTPException(status_code=404, detail="Profile not found")
     
-    # Generate workout plan
+    # Generate workout plan with membership type
     workout_data = WorkoutGenerator.generate_workout_plan(
         goal=profile.goal,
         activity_level=profile.activity_level,
-        duration_weeks=duration_weeks
+        duration_weeks=duration_weeks,
+        membership_type=profile.membership_type
     )
     
     # Save to database

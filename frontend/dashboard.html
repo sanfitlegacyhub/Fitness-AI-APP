@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fitness AI - Your Personal Fitness Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -13,23 +13,33 @@
         }
 
         :root {
-            --primary: #6366f1;
-            --primary-dark: #4f46e5;
-            --secondary: #8b5cf6;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --dark: #1f2937;
+            /* Classic Professional Color Palette */
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --primary-light: #3b82f6;
+            --secondary: #7c3aed;
+            --success: #059669;
+            --warning: #d97706;
+            --danger: #dc2626;
+            --dark: #111827;
+            --bg-dark: #1f2937;
+            --text: #374151;
+            --text-light: #6b7280;
             --light: #f9fafb;
-            --gray: #6b7280;
+            --white: #ffffff;
             --border: #e5e7eb;
+            --shadow: rgba(0, 0, 0, 0.1);
+            --shadow-lg: rgba(0, 0, 0, 0.15);
         }
 
         body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #1f2937;
             min-height: 100vh;
-            color: var(--dark);
+            color: var(--text);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         /* Login/Register Page */
@@ -39,88 +49,71 @@
             align-items: center;
             justify-content: center;
             padding: 20px;
+            background: #1f2937;
         }
 
         .auth-box {
-            background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(20px);
-            border-radius: 24px;
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 8px;
             padding: 48px;
-            max-width: 480px;
+            max-width: 440px;
             width: 100%;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            animation: slideUp 0.5s ease;
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         }
 
         .logo-section {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 32px;
         }
 
         .logo {
-            font-size: 64px;
-            margin-bottom: 16px;
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+            font-size: 48px;
+            margin-bottom: 12px;
         }
 
         .brand-title {
-            font-size: 32px;
-            font-weight: 900;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--dark);
             margin-bottom: 8px;
+            letter-spacing: -0.5px;
         }
 
         .brand-subtitle {
             color: var(--gray);
             font-size: 14px;
-            font-weight: 500;
+            font-weight: 400;
         }
 
         .auth-tabs {
             display: flex;
-            gap: 12px;
+            gap: 0;
             margin-bottom: 32px;
-            background: var(--light);
-            padding: 6px;
-            border-radius: 12px;
+            border-bottom: 2px solid var(--border);
         }
 
         .auth-tab {
             flex: 1;
-            padding: 12px;
+            padding: 12px 16px;
             border: none;
             background: transparent;
-            border-radius: 8px;
             font-size: 15px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.2s;
             color: var(--gray);
+            border-bottom: 2px solid transparent;
+            margin-bottom: -2px;
+        }
+
+        .auth-tab:hover {
+            color: var(--dark);
         }
 
         .auth-tab.active {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+            color: var(--primary);
+            border-bottom-color: var(--primary);
         }
 
         .auth-form {
@@ -129,64 +122,64 @@
 
         .auth-form.active {
             display: block;
-            animation: fadeIn 0.3s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
         }
 
         .form-group {
-            margin-bottom: 24px;
+            margin-bottom: 20px;
         }
 
         .form-label {
             display: block;
             font-weight: 600;
-            color: var(--dark);
+            color: var(--primary);
             margin-bottom: 8px;
             font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 12px;
         }
 
         .form-input {
             width: 100%;
-            padding: 14px 18px;
-            border: 2px solid var(--border);
-            border-radius: 12px;
+            padding: 12px 14px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
             font-size: 15px;
             font-family: inherit;
-            transition: all 0.3s;
-            font-weight: 500;
+            transition: all 0.2s;
+            background: #ffffff;
         }
 
         .form-input:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
 
         .btn {
             width: 100%;
-            padding: 16px;
+            padding: 12px 16px;
             border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 700;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.2s;
             font-family: inherit;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: var(--primary);
             color: white;
-            box-shadow: 0 12px 35px rgba(99, 102, 241, 0.35);
         }
 
         .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 16px 45px rgba(99, 102, 241, 0.45);
+            background: #1d4ed8;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-primary:active {
+            transform: translateY(1px);
         }
 
         .alert {
@@ -217,19 +210,20 @@
         .alert-success {
             background: #d1fae5;
             color: #065f46;
-            border: 2px solid #10b981;
+            border: 1px solid #10b981;
         }
 
         .alert-error {
             background: #fee2e2;
             color: #991b1b;
-            border: 2px solid #ef4444;
+            border: 1px solid #ef4444;
         }
 
         /* Dashboard */
         .dashboard {
             display: none;
             min-height: 100vh;
+            background: var(--bg-dark);
         }
 
         .dashboard.active {
@@ -237,32 +231,44 @@
         }
 
         .dashboard-header {
-            background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(20px);
-            padding: 20px 40px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            background: #ffffff;
+            border-bottom: 1px solid var(--border);
+            padding: 20px 48px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .dashboard-left {
+            display: flex;
+            align-items: center;
+            gap: 40px;
         }
 
         .dashboard-logo {
             display: flex;
             align-items: center;
             gap: 12px;
+            padding-right: 40px;
+            border-right: 2px solid var(--border);
         }
 
         .dashboard-logo-icon {
-            font-size: 32px;
+            font-size: 36px;
         }
 
         .dashboard-logo-text {
-            font-size: 24px;
-            font-weight: 900;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--primary);
+            letter-spacing: -0.5px;
+        }
+
+        .header-welcome {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text);
         }
 
         .dashboard-user {
@@ -272,16 +278,16 @@
         }
 
         .user-avatar {
-            width: 48px;
-            height: 48px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-weight: 700;
-            font-size: 18px;
+            font-weight: 600;
+            font-size: 16px;
         }
 
         .user-info {
@@ -289,8 +295,9 @@
         }
 
         .user-name {
-            font-weight: 700;
-            font-size: 15px;
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--dark);
         }
 
         .user-email {
@@ -299,49 +306,50 @@
         }
 
         .btn-logout {
-            padding: 10px 20px;
+            padding: 10px 24px;
             background: var(--danger);
             color: white;
             border: none;
-            border-radius: 8px;
-            font-weight: 600;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 14px;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.2s;
+            box-shadow: 0 2px 4px rgba(220, 38, 38, 0.2);
         }
 
         .btn-logout:hover {
-            background: #dc2626;
-            transform: translateY(-2px);
-
-        /* User Dropdown Menu */
-        .user-dropdown {
-            position: relative;
-            margin-left: 16px;
+            background: #b91c1c;
+            box-shadow: 0 4px 8px rgba(220, 38, 38, 0.3);
         }
 
+        .btn-logout:active {
+            transform: translateY(1px);
+        }
+
+        /* User Dropdown Menu */
         .user-dropdown {
             position: relative;
         }
 
         .btn-dropdown {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
+            background: transparent;
+            color: var(--dark);
+            border: 1px solid var(--border);
+            padding: 8px 16px;
+            border-radius: 6px;
             cursor: pointer;
             font-size: 14px;
             font-weight: 500;
-            transition: all 0.3s ease;
+            transition: all 0.2s;
             display: flex;
             align-items: center;
             gap: 8px;
         }
 
         .btn-dropdown:hover {
-            background: var(--secondary);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+            border-color: var(--primary);
+            color: var(--primary);
         }
 
         .dropdown-menu {
@@ -350,11 +358,10 @@
             top: calc(100% + 8px);
             right: 0;
             background: white;
-            border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             min-width: 200px;
-            transform: translateY(-10px);
-            transition: all 0.3s ease;
             z-index: 1000;
             overflow: hidden;
         }
@@ -394,102 +401,141 @@
         }
 
         .dropdown-menu a:hover {
-            background: var(--bg);
+            background: var(--light);
             color: var(--primary);
-            padding-left: 24px;
-        }
         }
 
         .dashboard-content {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 40px 20px;
         }
 
         .welcome-section {
-            background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(20px);
-            border-radius: 24px;
-            padding: 40px;
-            margin-bottom: 32px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 48px 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
         }
 
         .welcome-title {
-            font-size: 36px;
-            font-weight: 900;
+            font-size: 32px;
+            font-weight: 700;
             margin-bottom: 12px;
+            color: var(--dark);
+            letter-spacing: -0.5px;
+            text-align: center;
         }
 
         .welcome-text {
-            font-size: 16px;
-            color: var(--gray);
-            margin-bottom: 24px;
+            font-size: 17px;
+            color: var(--text-light);
+            margin-bottom: 40px;
+            text-align: center;
+            font-weight: 500;
         }
 
         .quick-actions {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 24px;
-            margin-top: 32px;
+            max-width: 1100px;
+            margin: 0 auto;
         }
 
         .action-card {
-            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
-            padding: 28px;
-            border-radius: 18px;
+            background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
+            padding: 40px 28px;
+            border: 2px solid var(--border);
+            border-radius: 16px;
             cursor: pointer;
-            transition: all 0.3s;
-            border: 2px solid transparent;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             user-select: none;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 200px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .action-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
         }
 
         .action-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.15);
             border-color: var(--primary);
-            background: linear-gradient(135deg, #e0e7ff, #ddd6fe);
+            box-shadow: 0 12px 32px rgba(37, 99, 235, 0.18);
+            transform: translateY(-6px);
+            background: #ffffff;
+        }
+
+        .action-card:hover::before {
+            transform: scaleX(1);
         }
 
         .action-card:active {
-            transform: translateY(-4px);
+            transform: translateY(-3px);
         }
 
         .action-icon {
-            font-size: 48px;
-            margin-bottom: 16px;
+            font-size: 56px;
+            margin-bottom: 20px;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+
+        .action-card:hover .action-icon {
+            transform: scale(1.1);
         }
 
         .action-title {
-            font-size: 20px;
+            font-size: 19px;
             font-weight: 700;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
+            color: var(--dark);
+            letter-spacing: -0.3px;
         }
 
         .action-desc {
             font-size: 14px;
-            color: var(--gray);
+            color: var(--text-light);
+            line-height: 1.6;
+            font-weight: 500;
         }
 
         .content-section {
-            background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(20px);
-            border-radius: 24px;
-            padding: 40px;
-            margin-bottom: 32px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
             display: none;
         }
 
         .content-section.active {
             display: block;
-            animation: fadeIn 0.5s ease;
         }
 
         .section-title {
-            font-size: 28px;
-            font-weight: 800;
-            margin-bottom: 24px;
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--dark);
+            letter-spacing: -0.5px;
         }
 
         .loading {
@@ -533,6 +579,25 @@
                 padding: 20px;
             }
 
+            .dashboard-left {
+                flex-direction: column;
+                gap: 12px;
+                width: 100%;
+            }
+
+            .dashboard-logo {
+                border-right: none;
+                border-bottom: 2px solid var(--border);
+                padding-right: 0;
+                padding-bottom: 12px;
+                width: 100%;
+                justify-content: center;
+            }
+
+            .header-welcome {
+                text-align: center;
+            }
+
             .dashboard-user {
                 width: 100%;
                 justify-content: space-between;
@@ -544,6 +609,10 @@
 
             .welcome-title {
                 font-size: 28px;
+            }
+
+            .welcome-section {
+                padding: 32px 24px;
             }
         }
     </style>
@@ -601,16 +670,19 @@
     <!-- Dashboard -->
     <div id="dashboardPage" class="dashboard">
         <div class="dashboard-header">
-            <div class="dashboard-logo">
-                <div class="dashboard-logo-icon">💪</div>
-                <div class="dashboard-logo-text">Fitness AI</div>
+            <div class="dashboard-left">
+                <div class="dashboard-logo">
+                    <div class="dashboard-logo-icon">🏋️</div>
+                    <div class="dashboard-logo-text">Fitness AI</div>
+                </div>
+                <div class="header-welcome">Welcome back, <span id="welcomeName">User</span>! 👋</div>
             </div>
             <div class="dashboard-user">
-                <a href="#" onclick="showSection('profile'); return false;" style="text-decoration: none; color: var(--primary); font-weight: 600; padding: 10px 20px; background: white; border-radius: 8px; margin-right: 12px;">
+                <a href="#" onclick="showSection('profile'); return false;" style="text-decoration: none; color: var(--primary); font-weight: 600; padding: 8px 16px; background: transparent; border: 1px solid var(--primary); border-radius: 6px; margin-right: 12px; transition: all 0.2s;">
                     📝 My Profile
                 </a>
                 <button class="btn-logout" onclick="handleLogout()">
-                    🚪 Logout
+                    Logout
                 </button>
             </div>
         </div>
@@ -618,7 +690,6 @@
         <div class="dashboard-content">
             <!-- Welcome Section -->
             <div class="welcome-section">
-                <h2 class="welcome-title">Welcome back, <span id="welcomeName">User</span>! 👋</h2>
                 <p class="welcome-text">Ready to crush your fitness goals today? Let's get started!</p>
                 
                 <div class="quick-actions">
@@ -626,6 +697,11 @@
                         <div class="action-icon">🎯</div>
                         <div class="action-title">Set Your Goal</div>
                         <div class="action-desc">Choose your fitness goal and get started</div>
+                    </div>
+                    <div class="action-card" onclick="showSection('membership')">
+                        <div class="action-icon">💳</div>
+                        <div class="action-title">My Membership</div>
+                        <div class="action-desc">View benefits and features</div>
                     </div>
                     <div class="action-card" onclick="showSection('metrics')">
                         <div class="action-icon">📊</div>
@@ -698,6 +774,15 @@
                         </select>
                     </div>
 
+                    <div class="form-group">
+                        <label class="form-label">Membership Type</label>
+                        <select class="form-input" id="membership_type" required>
+                            <option value="">Choose your membership...</option>
+                            <option value="yoga">🧘 Yoga - Flexibility, mindfulness, and balance</option>
+                            <option value="gym">🏋️ Gym - Strength training and cardio equipment</option>
+                        </select>
+                    </div>
+
                     <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 16px;">
                         Generate My Plan 🚀
                     </button>
@@ -713,29 +798,38 @@
 
             <div id="profileSection" class="content-section">
                 <h3 class="section-title">My Profile</h3>
-                <div style="background: linear-gradient(135deg, var(--primary), var(--secondary)); padding: 40px; border-radius: 16px; margin-bottom: 32px; color: white; text-align: center;">
-                    <div style="width: 100px; height: 100px; background: white; border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 48px; font-weight: 900; color: var(--primary);" id="profileAvatar">U</div>
-                    <h2 style="font-size: 32px; font-weight: 800; margin-bottom: 8px;" id="profileName">User</h2>
-                    <p style="font-size: 18px; opacity: 0.9;" id="profileEmail">user@email.com</p>
+                <div style="background: #ffffff; padding: 32px; border-radius: 8px; margin-bottom: 24px; border: 2px solid var(--primary); text-align: center;">
+                    <div style="width: 100px; height: 100px; background: var(--primary); border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 42px; font-weight: 700; color: white; border: 4px solid #e0e7ff;" id="profileAvatar">U</div>
+                    <h2 style="font-size: 26px; font-weight: 700; margin-bottom: 8px; color: var(--dark); letter-spacing: -0.5px;" id="profileName">User</h2>
+                    <p style="font-size: 15px; color: var(--gray); font-weight: 500;" id="profileEmail">user@email.com</p>
                 </div>
                 
-                <div style="background: #f8f9fa; padding: 32px; border-radius: 16px;">
-                    <h4 style="font-size: 20px; font-weight: 700; margin-bottom: 20px; color: var(--dark);">Account Information</h4>
+                <div style="background: #ffffff; padding: 28px; border-radius: 8px; border: 1px solid var(--border);">
+                    <h4 style="font-size: 16px; font-weight: 700; margin-bottom: 20px; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; border-bottom: 2px solid var(--primary); padding-bottom: 12px;">Account Information</h4>
                     <div style="display: grid; gap: 16px;">
-                        <div style="display: flex; justify-content: space-between; padding: 16px; background: white; border-radius: 8px;">
-                            <span style="font-weight: 600; color: var(--gray);">Username:</span>
-                            <span style="font-weight: 700; color: var(--dark);" id="profileUsername">-</span>
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px; background: var(--light); border-radius: 6px; border-left: 4px solid var(--primary);">
+                            <span style="font-weight: 600; color: var(--primary); text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px;">Username</span>
+                            <span style="font-weight: 600; color: var(--dark); font-size: 15px;" id="profileUsername">-</span>
                         </div>
-                        <div style="display: flex; justify-content: space-between; padding: 16px; background: white; border-radius: 8px;">
-                            <span style="font-weight: 600; color: var(--gray);">Email:</span>
-                            <span style="font-weight: 700; color: var(--dark);" id="profileEmailDetail">-</span>
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px; background: var(--light); border-radius: 6px; border-left: 4px solid var(--primary);">
+                            <span style="font-weight: 600; color: var(--primary); text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px;">Email</span>
+                            <span style="font-weight: 600; color: var(--dark); font-size: 15px;" id="profileEmailDetail">-</span>
                         </div>
-                        <div style="display: flex; justify-content: space-between; padding: 16px; background: white; border-radius: 8px;">
-                            <span style="font-weight: 600; color: var(--gray);">User ID:</span>
-                            <span style="font-weight: 700; color: var(--dark);" id="profileUserId">-</span>
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px; background: var(--light); border-radius: 6px; border-left: 4px solid var(--primary);">
+                            <span style="font-weight: 600; color: var(--primary); text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px;">User ID</span>
+                            <span style="font-weight: 600; color: var(--dark); font-size: 15px;" id="profileUserId">-</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px; background: var(--light); border-radius: 6px; border-left: 4px solid var(--success);">
+                            <span style="font-weight: 600; color: var(--success); text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px;">Membership</span>
+                            <span style="font-weight: 600; color: var(--dark); font-size: 15px;" id="profileMembership">Not set</span>
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <div id="membershipSection" class="content-section">
+                <h3 class="section-title">💳 My Membership</h3>
+                <div id="membership-content"></div>
             </div>
 
             <div id="metricsSection" class="content-section">
@@ -872,7 +966,8 @@
                 height: parseFloat(document.getElementById('height').value),
                 weight: parseFloat(document.getElementById('weight').value),
                 activity_level: document.getElementById('activity_level').value,
-                goal: document.getElementById('goal').value
+                goal: document.getElementById('goal').value,
+                membership_type: document.getElementById('membership_type').value
             };
 
             // Show loading
@@ -1061,11 +1156,23 @@
             document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
             
             // Show selected section
-            document.getElementById(section + 'Section').classList.add('active');
+            const sectionElement = document.getElementById(section + 'Section');
+            sectionElement.classList.add('active');
+
+            // Smooth scroll to the section
+            setTimeout(() => {
+                sectionElement.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start',
+                    inline: 'nearest'
+                });
+            }, 100);
 
             // Load data for specific sections
             if (section === 'profile' && currentUser) {
                 loadProfile();
+            } else if (section === 'membership' && currentUser) {
+                loadMembership();
             } else if (section === 'metrics' && currentUser) {
                 loadMetrics();
             } else if (section === 'workout' && currentUser) {
@@ -1075,7 +1182,7 @@
             }
         }
 
-        function loadProfile() {
+        async function loadProfile() {
             if (!currentUser) return;
             
             // Update profile information
@@ -1085,6 +1192,23 @@
             document.getElementById('profileUsername').textContent = currentUser.username;
             document.getElementById('profileEmailDetail').textContent = currentUser.email;
             document.getElementById('profileUserId').textContent = currentUser.id;
+            
+            // Fetch and display membership type
+            try {
+                const response = await fetch(`${API_URL}/profile/${currentUser.id}`);
+                if (response.ok) {
+                    const profile = await response.json();
+                    const membershipDisplay = profile.membership_type
+                        ? (profile.membership_type === 'yoga' ? '🧘 Yoga' : '🏋️ Gym')
+                        : 'Not set';
+                    document.getElementById('profileMembership').textContent = membershipDisplay;
+                } else {
+                    document.getElementById('profileMembership').textContent = 'Not set';
+                }
+            } catch (error) {
+                console.error('Error loading profile:', error);
+                document.getElementById('profileMembership').textContent = 'Not set';
+            }
         }
 
         function showDashboard() {
@@ -1101,6 +1225,127 @@
             document.getElementById('dashboardPage').classList.remove('active');
             document.getElementById('authPage').style.display = 'flex';
             document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+        }
+
+        async function loadMembership() {
+            if (!currentUser) return;
+            
+            try {
+                const response = await fetch(`${API_URL}/profile/${currentUser.id}`);
+                if (response.ok) {
+                    const profile = await response.json();
+                    displayMembershipBenefits(profile.membership_type);
+                } else {
+                    displayMembershipBenefits(null);
+                }
+            } catch (error) {
+                console.error('Error loading membership:', error);
+                displayMembershipBenefits(null);
+            }
+        }
+
+        function displayMembershipBenefits(membershipType) {
+            const yogaBenefits = {
+                icon: '🧘',
+                title: 'Yoga Membership',
+                color: '#8b5cf6',
+                benefits: [
+                    'Personalized yoga workout plans',
+                    'Flexibility and balance training',
+                    'Mindfulness and meditation guidance',
+                    'Stress relief techniques',
+                    'Breathing exercises (Pranayama)',
+                    'Posture improvement routines',
+                    'Weekly yoga flow sequences',
+                    'Restorative yoga sessions'
+                ],
+                features: [
+                    'Access to beginner, intermediate, and advanced poses',
+                    'Daily practice recommendations',
+                    'Progress tracking for flexibility',
+                    'Customized based on your fitness level'
+                ]
+            };
+
+            const gymBenefits = {
+                icon: '🏋️',
+                title: 'Gym Membership',
+                color: '#6366f1',
+                benefits: [
+                    'Personalized strength training plans',
+                    'Cardio workout routines',
+                    'Muscle building programs',
+                    'Weight loss focused exercises',
+                    'Equipment-based workouts',
+                    'Progressive overload tracking',
+                    'Full body workout splits',
+                    'HIIT training sessions'
+                ],
+                features: [
+                    'Access to all gym equipment exercises',
+                    'Customized sets, reps, and rest periods',
+                    'Goal-specific workout splits',
+                    'Weekly progression plans'
+                ]
+            };
+
+            let content;
+            if (!membershipType) {
+                content = `
+                    <div style="text-align: center; padding: 60px 20px; background: linear-gradient(135deg, #f8fafc, #f1f5f9); border-radius: 16px;">
+                        <div style="font-size: 64px; margin-bottom: 16px;">💳</div>
+                        <h3 style="margin: 0 0 12px 0; color: var(--dark); font-size: 24px;">No Membership Selected</h3>
+                        <p style="margin: 0 0 24px 0; color: var(--gray); font-size: 16px;">Choose your membership type to unlock personalized features</p>
+                        <button onclick="showSection('goal')" style="background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border: none; padding: 12px 32px; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer;">
+                            Set Your Goals & Choose Membership
+                        </button>
+                    </div>
+                `;
+            } else {
+                const benefits = membershipType === 'yoga' ? yogaBenefits : gymBenefits;
+                content = `
+                    <div style="background: linear-gradient(135deg, ${benefits.color}, ${benefits.color}dd); padding: 40px; border-radius: 16px; color: white; margin-bottom: 24px; text-align: center;">
+                        <div style="font-size: 64px; margin-bottom: 16px;">${benefits.icon}</div>
+                        <h2 style="margin: 0 0 8px 0; font-size: 32px; font-weight: 800;">${benefits.title}</h2>
+                        <p style="margin: 0; opacity: 0.9; font-size: 18px;">Active Membership</p>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-bottom: 24px;">
+                        <div style="background: white; padding: 32px; border-radius: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                            <h3 style="margin: 0 0 20px 0; color: ${benefits.color}; font-size: 22px; font-weight: 700;">✨ Your Benefits</h3>
+                            <ul style="list-style: none; padding: 0; margin: 0;">
+                                ${benefits.benefits.map(benefit => `
+                                    <li style="padding: 12px 0; border-bottom: 1px solid #f0f0f0; color: var(--dark); display: flex; align-items: center;">
+                                        <span style="color: ${benefits.color}; margin-right: 12px; font-size: 18px;">✓</span>
+                                        ${benefit}
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        </div>
+
+                        <div style="background: white; padding: 32px; border-radius: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                            <h3 style="margin: 0 0 20px 0; color: ${benefits.color}; font-size: 22px; font-weight: 700;">🎯 Key Features</h3>
+                            <ul style="list-style: none; padding: 0; margin: 0;">
+                                ${benefits.features.map(feature => `
+                                    <li style="padding: 16px; margin-bottom: 12px; background: linear-gradient(135deg, #f8fafc, #f1f5f9); border-radius: 12px; border-left: 4px solid ${benefits.color};">
+                                        ${feature}
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div style="background: linear-gradient(135deg, #10b981, #059669); padding: 24px; border-radius: 16px; color: white; text-align: center;">
+                        <h4 style="margin: 0 0 12px 0; font-size: 20px;">🚀 Ready to Start?</h4>
+                        <p style="margin: 0 0 16px 0; opacity: 0.9;">Your personalized ${membershipType === 'yoga' ? 'yoga' : 'gym'} workout plan is waiting for you!</p>
+                        <button onclick="showSection('workout')" style="background: white; color: #059669; border: none; padding: 12px 32px; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer;">
+                            View My Workout Plan
+                        </button>
+                    </div>
+                `;
+            }
+
+            document.getElementById('membership-content').innerHTML = content;
         }
 
         async function loadMetrics() {
