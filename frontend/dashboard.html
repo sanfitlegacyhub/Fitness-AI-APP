@@ -678,6 +678,9 @@
                 <div class="header-welcome">Welcome back, <span id="welcomeName">User</span>! 👋</div>
             </div>
             <div class="dashboard-user">
+                <a href="admin-panel.html" target="_blank" style="text-decoration: none; color: #7c3aed; font-weight: 600; padding: 8px 16px; background: transparent; border: 1px solid #7c3aed; border-radius: 6px; margin-right: 12px; transition: all 0.2s;">
+                    👨‍💼 Admin Panel
+                </a>
                 <a href="#" onclick="showSection('profile'); return false;" style="text-decoration: none; color: var(--primary); font-weight: 600; padding: 8px 16px; background: transparent; border: 1px solid var(--primary); border-radius: 6px; margin-right: 12px; transition: all 0.2s;">
                     📝 My Profile
                 </a>
@@ -717,6 +720,11 @@
                         <div class="action-icon">🥗</div>
                         <div class="action-title">Diet Plan</div>
                         <div class="action-desc">Personalized meal recommendations</div>
+                    </div>
+                    <div class="action-card" onclick="window.location.href='slot-booking-dashboard.html'">
+                        <div class="action-icon">📅</div>
+                        <div class="action-title">Book Slot</div>
+                        <div class="action-desc">Reserve your yoga or gym time slot</div>
                     </div>
                 </div>
             </div>
@@ -862,7 +870,7 @@
     </div>
 
     <script>
-        const API_URL = 'http://localhost:8486';
+        const API_URL = 'http://localhost:6447';
         let currentUser = null;
 
         // Check if user is logged in
@@ -1231,17 +1239,164 @@
             if (!currentUser) return;
             
             try {
-                const response = await fetch(`${API_URL}/profile/${currentUser.id}`);
-                if (response.ok) {
-                    const profile = await response.json();
-                    displayMembershipBenefits(profile.membership_type);
+                // Check if user has an active subscription
+                const subResponse = await fetch(`${API_URL}/subscription/${currentUser.id}`);
+                if (subResponse.ok) {
+                    const subscription = await subResponse.json();
+                    displayActiveSubscription(subscription);
                 } else {
-                    displayMembershipBenefits(null);
+                    // No subscription, show plans
+                    displaySubscriptionPlans();
                 }
             } catch (error) {
                 console.error('Error loading membership:', error);
-                displayMembershipBenefits(null);
+                displaySubscriptionPlans();
             }
+        }
+
+        async function displaySubscriptionPlans() {
+            try {
+                const response = await fetch(`${API_URL}/subscription-plans`);
+                const data = await response.json();
+                
+                let content = `
+                    <div style="text-align: center; margin-bottom: 40px;">
+                        <h2 style="font-size: 32px; font-weight: 800; margin-bottom: 12px; color: var(--dark);">Choose Your Membership Plan</h2>
+                        <p style="font-size: 18px; color: var(--text-light);">Select the perfect plan for your fitness journey</p>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)); gap: 32px;">
+                `;
+                
+                data.plans.forEach(plan => {
+                    content += `
+                        <div style="background: white; border: 2px solid var(--border); border-radius: 20px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: transform 0.3s;">
+                            <div style="background: linear-gradient(135deg, ${plan.membership_type === 'yoga' ? '#8b5cf6' : '#6366f1'}, ${plan.membership_type === 'yoga' ? '#7c3aed' : '#4f46e5'}); padding: 32px; text-align: center; color: white;">
+                                <div style="font-size: 64px; margin-bottom: 16px;">${plan.icon}</div>
+                                <h3 style="font-size: 28px; font-weight: 800; margin: 0 0 8px 0;">${plan.name}</h3>
+                                <p style="margin: 0; opacity: 0.9; font-size: 16px;">${plan.description}</p>
+                            </div>
+                            <div style="padding: 32px;">
+                                ${plan.durations.map((duration, index) => `
+                                    <div style="background: ${index === 2 ? 'linear-gradient(135deg, #fef3c7, #fde68a)' : '#f9fafb'}; padding: 24px; border-radius: 16px; margin-bottom: 16px; border: 2px solid ${index === 2 ? '#f59e0b' : 'var(--border)'}; position: relative;">
+                                        ${index === 2 ? '<div style="position: absolute; top: -12px; right: 20px; background: #f59e0b; color: white; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 700;">BEST VALUE</div>' : ''}
+                                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                                            <div>
+                                                <div style="font-size: 20px; font-weight: 700; color: var(--dark);">${duration.name}</div>
+                                                <div style="font-size: 14px; color: var(--text-light); margin-top: 4px;">₹${duration.per_month}/month</div>
+                                            </div>
+                                            <div style="text-align: right;">
+                                                <div style="font-size: 32px; font-weight: 800; color: ${plan.membership_type === 'yoga' ? '#8b5cf6' : '#6366f1'};">₹${duration.price}</div>
+                                                ${duration.savings > 0 ? `<div style="font-size: 13px; color: #059669; font-weight: 600;">Save ₹${duration.savings}</div>` : ''}
+                                            </div>
+                                        </div>
+                                        <button onclick="selectSubscription('${plan.membership_type}', '${duration.duration}')" style="width: 100%; background: linear-gradient(135deg, ${plan.membership_type === 'yoga' ? '#8b5cf6' : '#6366f1'}, ${plan.membership_type === 'yoga' ? '#7c3aed' : '#4f46e5'}); color: white; border: none; padding: 14px; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer; transition: transform 0.2s;">
+                                            Choose ${duration.name}
+                                        </button>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                content += `</div>`;
+                document.getElementById('membership-content').innerHTML = content;
+            } catch (error) {
+                console.error('Error loading subscription plans:', error);
+                document.getElementById('membership-content').innerHTML = `
+                    <div style="text-align: center; padding: 40px;">
+                        <p style="color: var(--danger);">Error loading subscription plans. Please try again.</p>
+                    </div>
+                `;
+            }
+        }
+
+        async function selectSubscription(membershipType, duration) {
+            if (!currentUser) {
+                alert('Please login first');
+                return;
+            }
+            
+            if (confirm(`Confirm subscription to ${membershipType === 'yoga' ? 'Yoga' : 'Gym'} membership for ${duration.replace('_', ' ')}?`)) {
+                try {
+                    const response = await fetch(`${API_URL}/subscription/${currentUser.id}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            membership_type: membershipType,
+                            duration: duration
+                        })
+                    });
+                    
+                    if (response.ok) {
+                        const subscription = await response.json();
+                        alert('Subscription activated successfully!');
+                        displayActiveSubscription(subscription);
+                    } else {
+                        const error = await response.json();
+                        alert('Error: ' + (error.detail || 'Failed to activate subscription'));
+                    }
+                } catch (error) {
+                    console.error('Error activating subscription:', error);
+                    alert('Error activating subscription. Please try again.');
+                }
+            }
+        }
+
+        function displayActiveSubscription(subscription) {
+            const isYoga = subscription.membership_type === 'yoga';
+            const color = isYoga ? '#8b5cf6' : '#6366f1';
+            const icon = isYoga ? '🧘' : '🏋️';
+            const name = isYoga ? 'Yoga' : 'Gym';
+            
+            const endDate = new Date(subscription.end_date);
+            const daysLeft = Math.ceil((endDate - new Date()) / (1000 * 60 * 60 * 24));
+            
+            const content = `
+                <div style="background: linear-gradient(135deg, ${color}, ${color}dd); padding: 40px; border-radius: 20px; color: white; margin-bottom: 32px; text-align: center;">
+                    <div style="font-size: 72px; margin-bottom: 16px;">${icon}</div>
+                    <h2 style="margin: 0 0 8px 0; font-size: 36px; font-weight: 800;">${name} Membership</h2>
+                    <p style="margin: 0 0 24px 0; opacity: 0.9; font-size: 18px;">Active Subscription</p>
+                    <div style="display: inline-block; background: rgba(255,255,255,0.2); padding: 12px 24px; border-radius: 12px; backdrop-filter: blur(10px);">
+                        <div style="font-size: 14px; opacity: 0.9; margin-bottom: 4px;">Expires on</div>
+                        <div style="font-size: 20px; font-weight: 700;">${endDate.toLocaleDateString()}</div>
+                        <div style="font-size: 14px; opacity: 0.9; margin-top: 4px;">${daysLeft} days remaining</div>
+                    </div>
+                </div>
+                
+                <div style="background: white; padding: 32px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); margin-bottom: 24px;">
+                    <h3 style="margin: 0 0 20px 0; font-size: 24px; font-weight: 700; color: var(--dark);">📊 Subscription Details</h3>
+                    <div style="display: grid; gap: 16px;">
+                        <div style="display: flex; justify-content: space-between; padding: 16px; background: var(--light); border-radius: 12px;">
+                            <span style="font-weight: 600; color: var(--text);">Plan Type</span>
+                            <span style="font-weight: 700; color: ${color};">${subscription.duration.replace('_', ' ').toUpperCase()}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 16px; background: var(--light); border-radius: 12px;">
+                            <span style="font-weight: 600; color: var(--text);">Amount Paid</span>
+                            <span style="font-weight: 700; color: var(--dark);">₹${subscription.price}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 16px; background: var(--light); border-radius: 12px;">
+                            <span style="font-weight: 600; color: var(--text);">Status</span>
+                            <span style="font-weight: 700; color: #059669;">${subscription.status.toUpperCase()}</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="background: linear-gradient(135deg, #10b981, #059669); padding: 32px; border-radius: 16px; color: white; text-align: center;">
+                    <h4 style="margin: 0 0 12px 0; font-size: 24px; font-weight: 700;">🚀 Start Your Journey!</h4>
+                    <p style="margin: 0 0 20px 0; opacity: 0.9; font-size: 16px;">Your personalized ${name.toLowerCase()} workout and diet plans are ready</p>
+                    <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+                        <button onclick="showSection('workout')" style="background: white; color: #059669; border: none; padding: 14px 28px; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer;">
+                            View Workout Plan
+                        </button>
+                        <button onclick="showSection('diet')" style="background: rgba(255,255,255,0.2); color: white; border: 2px solid white; padding: 14px 28px; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer;">
+                            View Diet Plan
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('membership-content').innerHTML = content;
         }
 
         function displayMembershipBenefits(membershipType) {

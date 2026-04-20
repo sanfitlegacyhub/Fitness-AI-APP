@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Booking Requests</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            color: #667eea;
+            font-size: 28px;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .card h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-success {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #6b7280;
+            color: white;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-approved {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-rejected {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .bookings-grid {
+            display: grid;
+            gap: 15px;
+        }
+
+        .booking-card {
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .booking-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .booking-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .info-label {
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 4px;
+        }
+
+        .info-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .alert {
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+            border-left: 4px solid #10b981;
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border-left: 4px solid #ef4444;
+        }
+
+        .alert-info {
+            background: #dbeafe;
+            color: #1e40af;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .admin-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .rejection-reason {
+            background: #fee2e2;
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-size: 14px;
+            color: #991b1b;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #6b7280;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6b7280;
+        }
+
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .setup-box {
+            background: #dbeafe;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #3b82f6;
+            margin-bottom: 20px;
+            max-width: 500px;
+        }
+
+        .setup-box h3 {
+            color: #1e40af;
+            margin-bottom: 10px;
+        }
+
+        .setup-box p {
+            color: #1e40af;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>👨‍💼 Admin Panel - Booking Requests</h1>
+            <button class="btn btn-secondary" onclick="window.location.href='/'">🏠 Back to Dashboard</button>
+        </div>
+
+        <div class="card">
+            <!-- Admin Setup (First Time) -->
+            <div id="adminSetup" style="display: none;">
+                <div class="setup-box">
+                    <h3>🔧 First Time Setup</h3>
+                    <p>Set your admin password to secure the admin panel. This will be stored locally in your browser.</p>
+                    <div class="form-group">
+                        <label for="setupPassword">Create Admin Password</label>
+                        <input type="password" id="setupPassword" placeholder="Enter a secure password" minlength="6">
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm Password</label>
+                        <input type="password" id="confirmPassword" placeholder="Re-enter password" minlength="6">
+                    </div>
+                    <button class="btn btn-primary" onclick="setupAdminPassword()">💾 Save Admin Password</button>
+                </div>
+            </div>
+
+            <!-- Admin Login -->
+            <div id="adminAuth">
+                <div style="max-width: 400px;">
+                    <h2>🔐 Admin Login</h2>
+                    <div class="form-group">
+                        <label for="adminPassword">Admin Password</label>
+                        <input type="password" id="adminPassword" placeholder="Enter admin password" onkeypress="if(event.key==='Enter') authenticateAdmin()">
+                    </div>
+                    <button class="btn btn-primary" onclick="authenticateAdmin()">Access Admin Panel</button>
+                    <div style="margin-top: 15px; padding: 12px; background: #f9fafb; border-radius: 8px;">
+                        <p style="color: #6b7280; font-size: 13px; margin-bottom: 8px;">
+                            <strong>👤 Who is the Admin?</strong><br>
+                            The admin is the gym/yoga center owner or manager who approves/rejects slot bookings.
+                        </p>
+                        <button class="btn btn-secondary" onclick="showAdminSetup()" style="font-size: 14px; padding: 8px 16px;">
+                            🔧 Change Admin Password
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Admin Panel -->
+            <div id="adminPanel" style="display: none;">
+                <input type="hidden" id="adminId" value="1">
+                <div style="display: flex; gap: 10px; margin-bottom: 20px; align-items: center; flex-wrap: wrap;">
+                    <h2 style="margin: 0;">Booking Requests</h2>
+                    <button class="btn btn-primary" onclick="loadPendingBookings()" style="margin-left: auto;">🔄 Refresh Pending</button>
+                    <button class="btn btn-secondary" onclick="loadAllBookings()">📋 View All</button>
+                    <button class="btn btn-danger" onclick="logoutAdmin()">🚪 Logout</button>
+                </div>
+                <div id="adminAlert"></div>
+                <div id="adminBookingsList"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:6447';
+
+        // Check if admin password is set on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const adminPassword = localStorage.getItem('fitnessAI_adminPassword');
+            if (!adminPassword) {
+                document.getElementById('adminSetup').style.display = 'block';
+                document.getElementById('adminAuth').style.display = 'none';
+            }
+        });
+
+        // Show alert
+        function showAlert(elementId, message, type) {
+            const alertDiv = document.getElementById(elementId);
+            alertDiv.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
+            setTimeout(() => {
+                alertDiv.innerHTML = '';
+            }, 5000);
+        }
+
+        // Setup admin password
+        function setupAdminPassword() {
+            const password = document.getElementById('setupPassword').value;
+            const confirm = document.getElementById('confirmPassword').value;
+            
+            if (!password || password.length < 6) {
+                alert('❌ Password must be at least 6 characters long');
+                return;
+            }
+            
+            if (password !== confirm) {
+                alert('❌ Passwords do not match');
+                return;
+            }
+            
+            localStorage.setItem('fitnessAI_adminPassword', password);
+            document.getElementById('adminSetup').style.display = 'none';
+            document.getElementById('adminAuth').style.display = 'block';
+            showAlert('adminAlert', '✅ Admin password set successfully! You can now login.', 'success');
+        }
+
+        // Show admin setup
+        function showAdminSetup() {
+            document.getElementById('adminSetup').style.display = 'block';
+            document.getElementById('adminAuth').style.display = 'none';
+            document.getElementById('setupPassword').value = '';
+            document.getElementById('confirmPassword').value = '';
+        }
+
+        // Admin authentication
+        function authenticateAdmin() {
+            const password = document.getElementById('adminPassword').value;
+            const storedPassword = localStorage.getItem('fitnessAI_adminPassword');
+            
+            if (!storedPassword) {
+                showAlert('adminAlert', '⚠️ Please set up admin password first', 'error');
+                showAdminSetup();
+                return;
+            }
+            
+            if (password === storedPassword) {
+                document.getElementById('adminAuth').style.display = 'none';
+                document.getElementById('adminPanel').style.display = 'block';
+                showAlert('adminAlert', '✅ Admin access granted', 'success');
+                loadPendingBookings();
+            } else {
+                showAlert('adminAlert', '❌ Invalid password', 'error');
+            }
+        }
+
+        // Admin logout
+        function logoutAdmin() {
+            document.getElementById('adminAuth').style.display = 'block';
+            document.getElementById('adminPanel').style.display = 'none';
+            document.getElementById('adminPassword').value = '';
+            document.getElementById('adminBookingsList').innerHTML = '';
+            showAlert('adminAlert', 'ℹ️ Logged out successfully', 'info');
+        }
+
+        // Load pending bookings
+        async function loadPendingBookings() {
+            const listDiv = document.getElementById('adminBookingsList');
+            listDiv.innerHTML = '<div class="loading">Loading pending bookings...</div>';
+
+            try {
+                const response = await fetch(`${API_URL}/admin/bookings/pending`);
+                const bookings = await response.json();
+
+                if (bookings.length === 0) {
+                    listDiv.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">✅</div>
+                            <h3>No pending bookings</h3>
+                            <p>All bookings have been processed.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                renderAdminBookings(bookings);
+            } catch (error) {
+                showAlert('adminAlert', `❌ Error: ${error.message}`, 'error');
+                listDiv.innerHTML = '';
+            }
+        }
+
+        // Load all bookings
+        async function loadAllBookings() {
+            const listDiv = document.getElementById('adminBookingsList');
+            listDiv.innerHTML = '<div class="loading">Loading all bookings...</div>';
+
+            try {
+                const response = await fetch(`${API_URL}/admin/bookings`);
+                const bookings = await response.json();
+
+                if (bookings.length === 0) {
+                    listDiv.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📭</div>
+                            <h3>No bookings found</h3>
+                        </div>
+                    `;
+                    return;
+                }
+
+                renderAdminBookings(bookings);
+            } catch (error) {
+                showAlert('adminAlert', `❌ Error: ${error.message}`, 'error');
+                listDiv.innerHTML = '';
+            }
+        }
+
+        // Render admin bookings
+        function renderAdminBookings(bookings) {
+            const listDiv = document.getElementById('adminBookingsList');
+            listDiv.innerHTML = '<div class="bookings-grid">' + bookings.map(booking => `
+                <div class="booking-card">
+                    <div class="booking-header">
+                        <h3>Booking #${booking.id}</h3>
+                        <span class="status-badge status-${booking.status}">${booking.status.toUpperCase()}</span>
+                    </div>
+                    <div class="booking-info">
+                        <div class="info-item">
+                            <span class="info-label">User</span>
+                            <span class="info-value">${booking.username}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Email</span>
+                            <span class="info-value">${booking.email}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Membership</span>
+                            <span class="info-value">${booking.membership_type === 'yoga' ? '🧘 Yoga' : '🏋️ Gym'}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Time Slot</span>
+                            <span class="info-value">${booking.time_slot === 'morning' ? '🌅 Morning' : '🌆 Evening'}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">From Date</span>
+                            <span class="info-value">${new Date(booking.date_from).toLocaleDateString()}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">To Date</span>
+                            <span class="info-value">${new Date(booking.date_to).toLocaleDateString()}</span>
+                        </div>
+                    </div>
+                    ${booking.rejection_reason ? `<div class="rejection-reason"><strong>Rejection Reason:</strong> ${booking.rejection_reason}</div>` : ''}
+                    ${booking.status === 'pending' ? `
+                        <div class="admin-actions">
+                            <button class="btn btn-success" onclick="approveBooking(${booking.id})">✅ Approve</button>
+                            <button class="btn btn-danger" onclick="rejectBooking(${booking.id})">❌ Reject</button>
+                        </div>
+                    ` : ''}
+                </div>
+            `).join('') + '</div>';
+        }
+
+        // Approve booking
+        async function approveBooking(bookingId) {
+            const adminId = document.getElementById('adminId').value;
+
+            try {
+                const response = await fetch(`${API_URL}/admin/bookings/approve?admin_id=${adminId}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        booking_id: bookingId,
+                        approved: true
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showAlert('adminAlert', '✅ Booking approved successfully', 'success');
+                    loadPendingBookings();
+                } else {
+                    showAlert('adminAlert', `❌ Error: ${data.detail}`, 'error');
+                }
+            } catch (error) {
+                showAlert('adminAlert', `❌ Error: ${error.message}`, 'error');
+            }
+        }
+
+        // Reject booking
+        async function rejectBooking(bookingId) {
+            const reason = prompt('Please enter rejection reason:');
+            if (!reason) return;
+
+            const adminId = document.getElementById('adminId').value;
+
+            try {
+                const response = await fetch(`${API_URL}/admin/bookings/approve?admin_id=${adminId}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        booking_id: bookingId,
+                        approved: false,
+                        rejection_reason: reason
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showAlert('adminAlert', '✅ Booking rejected successfully', 'success');
+                    loadPendingBookings();
+                } else {
+                    showAlert('adminAlert', `❌ Error: ${data.detail}`, 'error');
+                }
+            } catch (error) {
+                showAlert('adminAlert', `❌ Error: ${error.message}`, 'error');
+            }
+        }
+    </script>
+</body>
+</html>
