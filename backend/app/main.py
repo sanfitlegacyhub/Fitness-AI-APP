@@ -34,6 +34,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Mount static files for assets
+# Get the project root directory
+backend_dir = os.path.dirname(os.path.abspath(__file__))
+project_root = os.path.dirname(os.path.dirname(backend_dir))
+assets_path = os.path.join(project_root, "frontend", "assets")
+
+# Mount the assets directory
+if os.path.exists(assets_path):
+    app.mount("/assets", StaticFiles(directory=assets_path), name="assets")
+
 # Simple password hashing using hashlib (for demo purposes)
 def hash_password(password: str) -> str:
     return hashlib.sha256(password.encode()).hexdigest()
@@ -186,6 +196,33 @@ async def serve_frontend():
             </body>
         </html>
         """)
+
+@app.get("/dashboard.html", response_class=HTMLResponse)
+async def serve_dashboard():
+    # Serve the main dashboard page
+    frontend_path = r"C:\Users\SanthoshNR\Desktop\fitness-ai-app\frontend\dashboard.html"
+    
+    # Fallback: try relative path from backend directory
+    if not os.path.exists(frontend_path):
+        backend_dir = os.path.dirname(os.path.abspath(__file__))
+        project_root = os.path.dirname(os.path.dirname(backend_dir))
+        frontend_path = os.path.join(project_root, "frontend", "dashboard.html")
+    
+    try:
+        with open(frontend_path, "r", encoding="utf-8") as f:
+            return f.read()
+    except Exception as e:
+        return HTMLResponse(content=f"""
+        <html>
+            <body style="font-family: Arial; text-align: center; padding: 50px;">
+                <h1>❌ Dashboard Not Found</h1>
+                <p>Tried path: {frontend_path}</p>
+                <p>Error: {str(e)}</p>
+                <p><a href="/">Back to Home</a></p>
+            </body>
+        </html>
+        """)
+
 @app.get("/slot-booking-dashboard.html", response_class=HTMLResponse)
 async def serve_slot_booking_dashboard():
     # Use absolute path for the slot booking dashboard

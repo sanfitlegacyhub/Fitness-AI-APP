@@ -257,57 +257,23 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>👨‍💼 Admin Panel - Booking Requests</h1>
-            <button class="btn btn-secondary" onclick="window.location.href='/'">🏠 Back to Dashboard</button>
+            <div>
+                <h1>👨‍💼 Admin Panel - Booking Requests</h1>
+                <p style="color: #666; font-size: 14px; margin-top: 5px;">Welcome, <span id="adminUserDisplay">Admin</span></p>
+            </div>
+            <div>
+                <button class="btn btn-secondary" onclick="handleAdminLogout()">🚪 Logout</button>
+            </div>
         </div>
 
         <div class="card">
-            <!-- Admin Setup (First Time) -->
-            <div id="adminSetup" style="display: none;">
-                <div class="setup-box">
-                    <h3>🔧 First Time Setup</h3>
-                    <p>Set your admin password to secure the admin panel. This will be stored locally in your browser.</p>
-                    <div class="form-group">
-                        <label for="setupPassword">Create Admin Password</label>
-                        <input type="password" id="setupPassword" placeholder="Enter a secure password" minlength="6">
-                    </div>
-                    <div class="form-group">
-                        <label for="confirmPassword">Confirm Password</label>
-                        <input type="password" id="confirmPassword" placeholder="Re-enter password" minlength="6">
-                    </div>
-                    <button class="btn btn-primary" onclick="setupAdminPassword()">💾 Save Admin Password</button>
-                </div>
-            </div>
-
-            <!-- Admin Login -->
-            <div id="adminAuth">
-                <div style="max-width: 400px;">
-                    <h2>🔐 Admin Login</h2>
-                    <div class="form-group">
-                        <label for="adminPassword">Admin Password</label>
-                        <input type="password" id="adminPassword" placeholder="Enter admin password" onkeypress="if(event.key==='Enter') authenticateAdmin()">
-                    </div>
-                    <button class="btn btn-primary" onclick="authenticateAdmin()">Access Admin Panel</button>
-                    <div style="margin-top: 15px; padding: 12px; background: #f9fafb; border-radius: 8px;">
-                        <p style="color: #6b7280; font-size: 13px; margin-bottom: 8px;">
-                            <strong>👤 Who is the Admin?</strong><br>
-                            The admin is the gym/yoga center owner or manager who approves/rejects slot bookings.
-                        </p>
-                        <button class="btn btn-secondary" onclick="showAdminSetup()" style="font-size: 14px; padding: 8px 16px;">
-                            🔧 Change Admin Password
-                        </button>
-                    </div>
-                </div>
-            </div>
-
             <!-- Admin Panel -->
-            <div id="adminPanel" style="display: none;">
+            <div id="adminPanel">
                 <input type="hidden" id="adminId" value="1">
                 <div style="display: flex; gap: 10px; margin-bottom: 20px; align-items: center; flex-wrap: wrap;">
-                    <h2 style="margin: 0;">Booking Requests</h2>
+                    <h2 style="margin: 0;">📋 Booking Requests</h2>
                     <button class="btn btn-primary" onclick="loadPendingBookings()" style="margin-left: auto;">🔄 Refresh Pending</button>
-                    <button class="btn btn-secondary" onclick="loadAllBookings()">📋 View All</button>
-                    <button class="btn btn-danger" onclick="logoutAdmin()">🚪 Logout</button>
+                    <button class="btn btn-secondary" onclick="loadAllBookings()">📋 View All Bookings</button>
                 </div>
                 <div id="adminAlert"></div>
                 <div id="adminBookingsList"></div>
@@ -318,13 +284,18 @@
     <script>
         const API_URL = 'http://localhost:7777';
 
-        // Check if admin password is set on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            const adminPassword = localStorage.getItem('fitnessAI_adminPassword');
-            if (!adminPassword) {
-                document.getElementById('adminSetup').style.display = 'block';
-                document.getElementById('adminAuth').style.display = 'none';
+        // Check authentication on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            // Check if admin is authenticated
+            const isAuthenticated = sessionStorage.getItem('adminAuthenticated');
+            if (isAuthenticated !== 'true') {
+                // Redirect to dashboard login page
+                window.location.href = 'dashboard.html';
+                return;
             }
+
+            // Load pending bookings automatically
+            loadPendingBookings();
         });
 
         // Show alert
@@ -334,65 +305,6 @@
             setTimeout(() => {
                 alertDiv.innerHTML = '';
             }, 5000);
-        }
-
-        // Setup admin password
-        function setupAdminPassword() {
-            const password = document.getElementById('setupPassword').value;
-            const confirm = document.getElementById('confirmPassword').value;
-            
-            if (!password || password.length < 6) {
-                alert('❌ Password must be at least 6 characters long');
-                return;
-            }
-            
-            if (password !== confirm) {
-                alert('❌ Passwords do not match');
-                return;
-            }
-            
-            localStorage.setItem('fitnessAI_adminPassword', password);
-            document.getElementById('adminSetup').style.display = 'none';
-            document.getElementById('adminAuth').style.display = 'block';
-            showAlert('adminAlert', '✅ Admin password set successfully! You can now login.', 'success');
-        }
-
-        // Show admin setup
-        function showAdminSetup() {
-            document.getElementById('adminSetup').style.display = 'block';
-            document.getElementById('adminAuth').style.display = 'none';
-            document.getElementById('setupPassword').value = '';
-            document.getElementById('confirmPassword').value = '';
-        }
-
-        // Admin authentication
-        function authenticateAdmin() {
-            const password = document.getElementById('adminPassword').value;
-            const storedPassword = localStorage.getItem('fitnessAI_adminPassword');
-            
-            if (!storedPassword) {
-                showAlert('adminAlert', '⚠️ Please set up admin password first', 'error');
-                showAdminSetup();
-                return;
-            }
-            
-            if (password === storedPassword) {
-                document.getElementById('adminAuth').style.display = 'none';
-                document.getElementById('adminPanel').style.display = 'block';
-                showAlert('adminAlert', '✅ Admin access granted', 'success');
-                loadPendingBookings();
-            } else {
-                showAlert('adminAlert', '❌ Invalid password', 'error');
-            }
-        }
-
-        // Admin logout
-        function logoutAdmin() {
-            document.getElementById('adminAuth').style.display = 'block';
-            document.getElementById('adminPanel').style.display = 'none';
-            document.getElementById('adminPassword').value = '';
-            document.getElementById('adminBookingsList').innerHTML = '';
-            showAlert('adminAlert', 'ℹ️ Logged out successfully', 'info');
         }
 
         // Load pending bookings
@@ -551,6 +463,27 @@
                 showAlert('adminAlert', `❌ Error: ${error.message}`, 'error');
             }
         }
+
+        // Handle admin logout
+        function handleAdminLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                // Clear admin session
+                sessionStorage.removeItem('adminAuthenticated');
+                sessionStorage.removeItem('adminUsername');
+                sessionStorage.removeItem('adminLoginTime');
+                
+                // Redirect to main dashboard page
+                window.location.href = '/dashboard.html';
+            }
+        }
+
+        // Display admin username on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            const adminUsername = sessionStorage.getItem('adminUsername');
+            if (adminUsername) {
+                document.getElementById('adminUserDisplay').textContent = adminUsername;
+            }
+        });
     </script>
 </body>
 </html>
