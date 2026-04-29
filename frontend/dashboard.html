@@ -1128,6 +1128,81 @@
             }
         }
 
+        // Check if admin password is set on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            const adminPassword = localStorage.getItem('fitnessAI_adminPassword');
+            const adminUsername = localStorage.getItem('fitnessAI_adminUsername');
+            
+            // Show setup form if no password is set
+            if (!adminPassword || !adminUsername) {
+                showAdminSetupForm();
+            }
+        });
+
+        // Show admin setup form for first-time setup
+        function showAdminSetupForm() {
+            const adminForm = document.getElementById('adminForm');
+            if (adminForm) {
+                adminForm.innerHTML = `
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <div style="font-size: 48px; margin-bottom: 10px;">🔧</div>
+                        <h3 style="color: #667eea; margin: 0;">First Time Setup</h3>
+                        <p style="color: #666; font-size: 14px; margin-top: 5px;">Set your admin credentials</p>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Admin Username</label>
+                        <input type="text" class="form-input" id="setup-username" placeholder="Choose admin username" required minlength="4">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Admin Password</label>
+                        <input type="password" class="form-input" id="setup-password" placeholder="Create a strong password" required minlength="6">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Confirm Password</label>
+                        <input type="password" class="form-input" id="setup-confirm-password" placeholder="Re-enter password" required minlength="6">
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="handleAdminSetup()" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        💾 Save Admin Credentials
+                    </button>
+                `;
+            }
+        }
+
+        // Handle admin setup (first-time)
+        function handleAdminSetup() {
+            const username = document.getElementById('setup-username').value;
+            const password = document.getElementById('setup-password').value;
+            const confirmPassword = document.getElementById('setup-confirm-password').value;
+
+            // Validation
+            if (!username || username.length < 4) {
+                showAlert('error', 'Username must be at least 4 characters long');
+                return;
+            }
+
+            if (!password || password.length < 6) {
+                showAlert('error', 'Password must be at least 6 characters long');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                showAlert('error', 'Passwords do not match');
+                return;
+            }
+
+            // Store credentials in localStorage (for demo - in production use backend)
+            localStorage.setItem('fitnessAI_adminUsername', username);
+            localStorage.setItem('fitnessAI_adminPassword', password);
+
+            showAlert('success', 'Admin credentials saved successfully! Please login.');
+
+            // Show login form after 2 seconds
+            setTimeout(() => {
+                location.reload(); // Reload to show login form
+            }, 2000);
+        }
+
+        // Handle admin login
         async function handleAdminLogin(event) {
             event.preventDefault();
             hideAlerts();
@@ -1135,10 +1210,13 @@
             const username = document.getElementById('admin-username').value;
             const password = document.getElementById('admin-password').value;
 
+            // Get stored credentials
+            const storedUsername = localStorage.getItem('fitnessAI_adminUsername');
+            const storedPassword = localStorage.getItem('fitnessAI_adminPassword');
+
             try {
-                // For demo purposes, using hardcoded credentials
-                // In production, this should be validated against a secure backend
-                if (username === 'admin' && password === 'admin123') {
+                // Check if credentials match
+                if (username === storedUsername && password === storedPassword) {
                     // Store admin session
                     sessionStorage.setItem('adminAuthenticated', 'true');
                     sessionStorage.setItem('adminUsername', username);
